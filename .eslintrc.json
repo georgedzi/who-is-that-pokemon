@@ -33,6 +33,7 @@
                 "avoidEscape": true
             }
         ],
-        "@typescript-eslint/semi": ["error", "always"]
+        "@typescript-eslint/semi": ["error", "always"],
+        "no-multi-spaces": "warn"
     }
 }

@@ -4,8 +4,6 @@ import { IPokeApiResponse } from "../Models/IPokeApiResponse";
 import { catchError, firstValueFrom, map, Observable, throwError } from "rxjs";
 import { IPokeApiDetailsResponse } from "../Models/IPokeApiDetailsResponse";
 
-
-
 export class PokemonService {
   private static instance: PokemonService;
   private readonly pokeApiDefaultUrl: string = "https://pokeapi.co/api/v2/pokemon";
@@ -63,9 +61,10 @@ export class PokemonService {
   }
 
   // IPokeApiDetailsResponse will have to be built upon on a per needed bases. Currently only has the sprites
-  public getPokemonDetailsByUrl(url: string): Observable<IPokeApiDetailsResponse> {
-    return ajax.getJSON<IPokeApiDetailsResponse>(url).pipe(
+  public getPokemonDetailsByUrl(pokemon: Pokemon): Observable<IPokeApiDetailsResponse> {
+    return ajax.getJSON<IPokeApiDetailsResponse>(pokemon.url).pipe(
       map(response => {
+        pokemon.details = response;
         return response;
       }),
       catchError(error => {

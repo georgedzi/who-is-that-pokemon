@@ -6,9 +6,7 @@ import { PokemonService } from "./Services/PokemonService";
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 async function Main(){
-  console.log("getting pokemon");
   await PokemonService.initializeInstance();
-  console.log("got pokemon");
   
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const root = ReactDOM.createRoot(document.getElementById("root")!);

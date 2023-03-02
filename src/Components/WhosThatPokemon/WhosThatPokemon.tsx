@@ -16,28 +16,38 @@ function WhosThatPokemon() {
   let pokemonToGuess = getRandomNumber(pokemonCount);
 
   const [pokemon, setPokemon] = useState<Pokemon>(new Pokemon());
+  const [guess, setGuess] = useState<string>("");
   
   // adding debounce to prevent annoying flicker in strict mode
   const getPokemonDetails = debounce((requestedPokemon: Pokemon) => {
     if (!requestedPokemon.details) {
-
-      pokemonServiceInstance.getPokemonDetailsByUrl(requestedPokemon.url).subscribe(pokemonDetails => {
+      pokemonServiceInstance.getPokemonDetailsByUrl(requestedPokemon).subscribe(pokemonDetails => {
         if (!pokemonDetails.sprites.front_default) {
           guessNextPokemon();
-          return;
         }
-        const updatedPokemon = { ...requestedPokemon, details: pokemonDetails };
-        setPokemon(updatedPokemon);
+        setPokemon(requestedPokemon);
       });
-    } else {
-      setPokemon(requestedPokemon);
-      console.log("reused data");
     }
+    else{
+      setPokemon(requestedPokemon);
+    } 
   });
 
   const guessNextPokemon = () => {
+    setPokemon(new Pokemon());
+    setGuess("");
     pokemonToGuess = getRandomNumber(pokemonCount);
     getPokemonDetails(allPokemon[pokemonToGuess]);
+  };
+
+  const checkValue = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (guess.toLowerCase() === pokemon.name.toLowerCase()) {
+      console.log("Correct");
+      guessNextPokemon();
+    } else {
+      console.log("Wrong");
+    }
   };
 
   useEffect(() => {
@@ -47,10 +57,23 @@ function WhosThatPokemon() {
   return (
     <>
       {!pokemon.details && <div>Loading...</div>}
-      <img width="400px" onLoad={() => console.log("image loaded")} src={pokemon.details?.sprites.front_default}></img>
-      <div>{pokemon.details && `${pokemon.name} ${pokemon.details.id} ${pokemon.url}`}</div>
+      <img width="400px" src={pokemon.details?.sprites.front_default}></img>
+      <div style={{fontSize: "26px"}}>{pokemon.details && `${pokemon.name} ${pokemon.details.id} ${pokemon.url}`}</div>
 
       <button onClick={guessNextPokemon}>Next Pokemon</button>
+
+          <div>
+      <form onSubmit={checkValue}>
+        <label>
+          <input
+            type="text"
+            value={guess}
+            onChange={(event) => setGuess(event.target.value)}
+          />
+        </label>
+        <button type="submit">Check</button>
+      </form>
+    </div>
     </>
   );
 }
