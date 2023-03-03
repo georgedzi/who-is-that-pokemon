@@ -1,14 +1,17 @@
 import { IPokeApiDetailsResponse } from "./IPokeApiDetailsResponse";
+import { SpritesUrls } from "./PokemonDetails/SpriteUrls";
 
 export class Pokemon {
-    id: number;
     name: string;
     url: string;
     details!: IPokeApiDetailsResponse;
 
-    constructor(id = 0, name = "", url = "") {
-        this.id = id;
+    constructor(name = "", url = "") {
         this.name = name;
         this.url = url;
+        this.details = {
+            sprites: new SpritesUrls(),
+            id: 0
+        };
     }
 }
